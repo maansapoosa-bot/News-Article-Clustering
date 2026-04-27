@@ -41,7 +41,7 @@ print("Loading data...")
 import os
 import sys
 
-file_path = os.path.join(os.path.dirname(__file__), "clustered_data.csv")
+file_path = os.path.join(os.path.dirname(__file__), "clustered_data_slim.csv")
 
 if not os.path.exists(file_path):
     print(f"ERROR: {file_path} not found. Run build.sh to download it.", file=sys.stderr)

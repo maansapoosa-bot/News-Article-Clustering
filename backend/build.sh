@@ -8,13 +8,13 @@ echo "Downloading clustered_data.csv from Google Drive..."
 python3 - <<'PYEOF'
 import os, sys, re, requests
 
-file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "clustered_data.csv")
+file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "clustered_data_slim.csv")
 
 if os.path.exists(file_path) and os.path.getsize(file_path) > 10_000_000:
     print(f"CSV already exists ({os.path.getsize(file_path)} bytes), skipping download.")
     sys.exit(0)
 
-FILE_ID = "1ofVz9-SmtWHskuYHzRpSaiOkwFvvBqGp"
+FILE_ID = "1Q3QRFh4COicewZ462g6i9iAhdJBuB0am"
 session = requests.Session()
 session.headers.update({"User-Agent": "Mozilla/5.0"})
 
