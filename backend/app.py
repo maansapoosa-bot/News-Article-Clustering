@@ -39,18 +39,26 @@ def extract_distinctive_keywords(df, cluster_id, all_counts, top_n=8):
 
 print("Loading data...")
 import os
+import sys
 import urllib.request
 
 file_path = os.path.join(os.path.dirname(__file__), "clustered_data.csv")
 
 if not os.path.exists(file_path):
     print("clustered_data.csv not found locally. Downloading from Google Drive...")
-    gdrive_id = "1ofVz9-SmtWHskuYHzRpSaiOkwFvvBqGp"
-    url = f"https://drive.google.com/uc?export=download&id={gdrive_id}&confirm=t"
-    urllib.request.urlretrieve(url, file_path)
-    print("Download complete.")
+    try:
+        gdrive_id = "1ofVz9-SmtWHskuYHzRpSaiOkwFvvBqGp"
+        url = f"https://drive.google.com/uc?export=download&id={gdrive_id}&confirm=t"
+        urllib.request.urlretrieve(url, file_path)
+        print(f"Download complete. File size: {os.path.getsize(file_path)} bytes")
+    except Exception as e:
+        print(f"ERROR: Failed to download CSV: {e}", file=sys.stderr)
+        sys.exit(1)
+else:
+    print(f"Found existing CSV at {file_path} ({os.path.getsize(file_path)} bytes)")
 
 df = pd.read_csv(file_path)
+print(f"Loaded {len(df)} rows.")
 
 print("Pre-computing cluster data...")
 
