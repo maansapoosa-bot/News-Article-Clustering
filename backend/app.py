@@ -38,7 +38,10 @@ def extract_distinctive_keywords(df, cluster_id, all_counts, top_n=8):
     return sorted(scored, key=scored.get, reverse=True)[:top_n]
 
 print("Loading data...")
-df = pd.read_csv("clustered_data.csv")
+import os
+
+file_path = os.path.join(os.path.dirname(__file__), "clustered_data.csv")
+df = pd.read_csv(file_path)
 
 print("Pre-computing cluster data...")
 
