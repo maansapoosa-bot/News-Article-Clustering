@@ -8,6 +8,7 @@ import { Search, X, ChevronLeft, ChevronRight, ArrowRight, Loader2 } from "lucid
 
 const COLORS = ['#2e4057', '#b5862a', '#4a7c8e', '#1c2b3a', '#7a5c2e', '#3d6b5c', '#6b3a4a'];
 const ACCENT = "#b5862a"; // gold
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function fmtDate(str) {
@@ -62,7 +63,7 @@ export default function App() {
   const [modal, setModal]             = useState(null);
 
   useEffect(() => {
-    axios.get("/api/cluster-info")
+    axios.get(`${API_BASE}/api/cluster-info`)
       .then(r => { setClusterInfo(r.data); setInfoError(false); })
       .catch(() => setInfoError(true));
   }, []);
@@ -76,7 +77,7 @@ export default function App() {
     setLoading(true);
     const idMap = clusterInfo.clusterIds || {};
     const cid = selectedCluster === "all" ? "all" : (idMap[selectedCluster] ?? selectedCluster);
-    axios.get("/api/data", { params: { cluster: cid, q: searchQuery, page, per_page: 12 } })
+    axios.get(`${API_BASE}/api/data`, { params: { cluster: cid, q: searchQuery, page, per_page: 12 } })
       .then(r => {
         setArticles(r.data.articles || []);
         setPagination({ total: r.data.total, page: r.data.page, pages: r.data.pages });
