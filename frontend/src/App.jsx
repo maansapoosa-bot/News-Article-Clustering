@@ -10,6 +10,11 @@ const COLORS = ['#2e4057', '#b5862a', '#4a7c8e', '#1c2b3a', '#7a5c2e', '#3d6b5c'
 const ACCENT = "#b5862a"; // gold
 const API_BASE = "https://news-article-clustering-1.onrender.com";
 
+// Keep Render backend alive by pinging it every 14 minutes
+setInterval(() => {
+  fetch(`${API_BASE}/cluster-info`).catch(() => {});
+}, 14 * 60 * 1000);
+
 // ── Helpers ────────────────────────────────────────────────────────────────
 function fmtDate(str) {
   if (!str) return "";
