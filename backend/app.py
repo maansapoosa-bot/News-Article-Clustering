@@ -39,8 +39,16 @@ def extract_distinctive_keywords(df, cluster_id, all_counts, top_n=8):
 
 print("Loading data...")
 import os
+import gdown
 
 file_path = os.path.join(os.path.dirname(__file__), "clustered_data.csv")
+
+if not os.path.exists(file_path):
+    print("clustered_data.csv not found locally. Downloading from Google Drive...")
+    gdrive_id = "1ofVz9-SmtWHskuYHzRpSaiOkwFvvBqGp"
+    gdown.download(id=gdrive_id, output=file_path, quiet=False, fuzzy=True)
+    print("Download complete.")
+
 df = pd.read_csv(file_path)
 
 print("Pre-computing cluster data...")
