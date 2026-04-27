@@ -8,7 +8,7 @@ import { Search, X, ChevronLeft, ChevronRight, ArrowRight, Loader2 } from "lucid
 
 const COLORS = ['#2e4057', '#b5862a', '#4a7c8e', '#1c2b3a', '#7a5c2e', '#3d6b5c', '#6b3a4a'];
 const ACCENT = "#b5862a"; // gold
-const API_BASE = import.meta.env.VITE_API_URL ?? "https://news-article-clustering-1.onrender.com";
+const API_BASE = "https://news-article-clustering-1.onrender.com";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function fmtDate(str) {
