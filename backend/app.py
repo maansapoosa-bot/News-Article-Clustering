@@ -40,53 +40,12 @@ def extract_distinctive_keywords(df, cluster_id, all_counts, top_n=8):
 print("Loading data...")
 import os
 import sys
-import requests
 
 file_path = os.path.join(os.path.dirname(__file__), "clustered_data.csv")
 
-def download_from_gdrive(file_id, dest_path):
-    session = requests.Session()
-    url = "https://drive.google.com/uc?export=download"
-    
-    # First request — may get a confirmation page for large files
-    response = session.get(url, params={"id": file_id}, stream=True)
-    
-    # Check if Google returned a confirmation page (large file warning)
-    token = None
-    for key, value in response.cookies.items():
-        if key.startswith("download_warning"):
-            token = value
-            break
-    
-    # If confirmation token found, re-request with it
-    if token:
-        print("Large file detected, using confirmation token...")
-        response = session.get(url, params={"id": file_id, "confirm": token}, stream=True)
-    
-    # Write to file
-    with open(dest_path, "wb") as f:
-        for chunk in response.iter_content(chunk_size=32768):
-            if chunk:
-                f.write(chunk)
-
 if not os.path.exists(file_path):
-    print("clustered_data.csv not found locally. Downloading from Google Drive...")
-    try:
-        gdrive_id = "1ofVz9-SmtWHskuYHzRpSaiOkwFvvBqGp"
-        download_from_gdrive(gdrive_id, file_path)
-        size = os.path.getsize(file_path)
-        print(f"Download complete. File size: {size} bytes")
-        if size < 1_000_000:
-            print("ERROR: Downloaded file is too small — likely an HTML error page, not the CSV.", file=sys.stderr)
-            os.remove(file_path)
-            sys.exit(1)
-    except Exception as e:
-        print(f"ERROR: Failed to download CSV: {e}", file=sys.stderr)
-        if os.path.exists(file_path):
-            os.remove(file_path)
-        sys.exit(1)
-else:
-    print(f"Found existing CSV at {file_path} ({os.path.getsize(file_path)} bytes)")
+    print(f"ERROR: {file_path} not found. Run build.sh to download it.", file=sys.stderr)
+    sys.exit(1)
 
 df = pd.read_csv(file_path)
 print(f"Loaded {len(df)} rows.")
