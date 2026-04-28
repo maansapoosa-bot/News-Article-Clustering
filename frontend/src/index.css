@@ -404,7 +404,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.35rem;
+  flex-wrap: wrap;
   margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 1px solid var(--rule);
@@ -416,7 +417,7 @@ body {
   background: var(--ink);
   color: var(--paper);
   border: none;
-  padding: 0.4rem 0.9rem;
+  padding: 0.4rem 0.75rem;
   font-family: 'Source Serif 4', serif;
   font-size: 0.78rem;
   font-weight: 600;
@@ -426,6 +427,28 @@ body {
 }
 .np-page-btn:hover:not(:disabled) { background: var(--accent); }
 .np-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.np-page-num {
+  min-width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.np-page-num:hover { background: var(--ink); color: var(--paper); }
+.np-page-num.active { background: var(--accent); color: var(--paper); border-color: var(--accent); font-weight: 700; }
+.np-page-ellipsis {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.85rem;
+  color: var(--ink-mid);
+  padding: 0 0.2rem;
+}
 .np-page-info {
   font-family: 'IM Fell English', serif;
   font-style: italic;

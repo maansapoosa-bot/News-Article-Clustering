@@ -294,12 +294,43 @@ export default function App() {
               {/* Pagination */}
               {pagination.pages > 1 && (
                 <div className="np-pagination">
+                  <button className="np-page-btn" disabled={page <= 1} onClick={() => setPage(1)}>
+                    «
+                  </button>
                   <button className="np-page-btn" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
                     <ChevronLeft size={14} /> Prev
                   </button>
-                  <span className="np-page-info">Page {pagination.page} of {pagination.pages}</span>
+                  {(() => {
+                    const total = pagination.pages;
+                    const current = page;
+                    const delta = 2;
+                    const pages = [];
+                    const left = Math.max(2, current - delta);
+                    const right = Math.min(total - 1, current + delta);
+                    pages.push(1);
+                    if (left > 2) pages.push("...");
+                    for (let i = left; i <= right; i++) pages.push(i);
+                    if (right < total - 1) pages.push("...");
+                    if (total > 1) pages.push(total);
+                    return pages.map((p, i) =>
+                      p === "..." ? (
+                        <span key={`ellipsis-${i}`} className="np-page-ellipsis">…</span>
+                      ) : (
+                        <button
+                          key={p}
+                          className={`np-page-num ${p === current ? "active" : ""}`}
+                          onClick={() => setPage(p)}
+                        >
+                          {p}
+                        </button>
+                      )
+                    );
+                  })()}
                   <button className="np-page-btn" disabled={page >= pagination.pages} onClick={() => setPage(p => p + 1)}>
                     Next <ChevronRight size={14} />
+                  </button>
+                  <button className="np-page-btn" disabled={page >= pagination.pages} onClick={() => setPage(pagination.pages)}>
+                    »
                   </button>
                 </div>
               )}
