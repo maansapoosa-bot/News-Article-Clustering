@@ -69,7 +69,7 @@ export default function App() {
   const [modal, setModal]             = useState(null);
 
   useEffect(() => {
-    axios.get(`${API_BASE}/api/cluster-info`)
+    axios.get(`${API_BASE}/cluster-info`, { timeout: 60000 })
       .then(r => { setClusterInfo(r.data); setInfoError(false); })
       .catch(() => setInfoError(true));
   }, []);
@@ -83,7 +83,7 @@ export default function App() {
     setLoading(true);
     const idMap = clusterInfo.clusterIds || {};
     const cid = selectedCluster === "all" ? "all" : (idMap[selectedCluster] ?? selectedCluster);
-    axios.get(`${API_BASE}/api/data`, { params: { cluster: cid, q: searchQuery, page, per_page: 12 } })
+    axios.get(`${API_BASE}/data`, { params: { cluster: cid, q: searchQuery, page, per_page: 12 }, timeout: 60000 })
       .then(r => {
         setArticles(r.data.articles || []);
         setPagination({ total: r.data.total, page: r.data.page, pages: r.data.pages });
