@@ -105,6 +105,8 @@ export default function App() {
 
   const today = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
+  const hasLeftCol = selectedCluster !== "all" && clusterInfo.keywords?.[selectedCluster];
+
   return (
     <div className="np-page">
 
@@ -157,24 +159,20 @@ export default function App() {
       </header>
 
       {/* ══ MAIN CONTENT ══ */}
-      <main className="np-main">
+      <main className={`np-main${hasLeftCol ? " has-left" : ""}`}>
 
-        {/* ── Left column: analytics ── */}
-        <aside className="np-col-left">
-          {/* Keywords */}
-          {selectedCluster !== "all" && clusterInfo.keywords?.[selectedCluster] && (
-            <>
-              <div className="np-rule" style={{ marginTop: "1.25rem" }} />
-              <div className="np-section-label">Key Terms</div>
-              <div className="np-rule" />
-              <div className="np-keywords">
-                {clusterInfo.keywords[selectedCluster].map((kw, i) => (
-                  <span key={i} className="np-kw">{kw}</span>
-                ))}
-              </div>
-            </>
-          )}
-        </aside>
+        {/* ── Left column: keywords (only when cluster selected) ── */}
+        {hasLeftCol && (
+          <aside className="np-col-left">
+            <div className="np-section-label">Key Terms</div>
+            <div className="np-rule" />
+            <div className="np-keywords">
+              {clusterInfo.keywords[selectedCluster].map((kw, i) => (
+                <span key={i} className="np-kw">{kw}</span>
+              ))}
+            </div>
+          </aside>
+        )}
 
         {/* ── Centre column: articles ── */}
         <section className="np-col-centre">

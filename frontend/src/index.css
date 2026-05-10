@@ -172,10 +172,15 @@ body {
 /* ── Main 3-col layout ── */
 .np-main {
   display: grid;
-  grid-template-columns: 220px 1fr 200px;
+  grid-template-columns: 1fr 200px;
   gap: 0;
   padding: 1.25rem 2rem 0;
   border-top: 1px solid var(--rule);
+}
+
+/* Left col only shown when keywords are visible (cluster selected) */
+.np-main.has-left {
+  grid-template-columns: 220px 1fr 200px;
 }
 
 /* Column dividers */
@@ -186,6 +191,9 @@ body {
 .np-col-centre {
   padding: 0 var(--col-gap);
   border-right: 1px solid var(--rule);
+}
+.np-main:not(.has-left) .np-col-centre {
+  padding-left: 0;
 }
 .np-col-right {
   padding-left: var(--col-gap);
