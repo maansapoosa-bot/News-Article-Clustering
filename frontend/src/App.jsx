@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
-  PieChart, Pie, Cell as PieCell
-} from "recharts";
+
 import { Search, X, ChevronLeft, ChevronRight, ArrowRight, Loader2 } from "lucide-react";
 
 const COLORS = ['#2e4057', '#b5862a', '#4a7c8e', '#1c2b3a', '#7a5c2e', '#3d6b5c', '#6b3a4a'];
@@ -97,15 +94,6 @@ export default function App() {
     return () => clearTimeout(t);
   }, [inputValue]);
 
-  const chartData = Object.keys(clusterInfo.counts || {}).map((k, i) => ({
-    name: k.replace("Global News & Politics", "Global News").replace("Sports & Athletics", "Sports"),
-    fullName: k, count: clusterInfo.counts[k], color: COLORS[i % COLORS.length]
-  })).sort((a, b) => b.count - a.count);
-
-  const categoryData = Object.entries(clusterInfo.categories || {})
-    .map(([name, value]) => ({ name, value }))
-    .sort((a, b) => b.value - a.value).slice(0, 6);
-
   const stats = clusterInfo.stats || {};
   const authors = clusterInfo.authors || [];
   const clusterKeys = Object.keys(clusterInfo.counts || {});
@@ -173,61 +161,6 @@ export default function App() {
 
         {/* ── Left column: analytics ── */}
         <aside className="np-col-left">
-          <div className="np-section-label">Cluster Distribution</div>
-          <div className="np-rule" />
-          <div style={{ height: 130 }}>
-            {chartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} layout="vertical" margin={{ top: 2, right: 36, left: 4, bottom: 2 }} barSize={14}>
-                  <XAxis type="number" hide />
-                  <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: "var(--ink-mid)", fontFamily: "Source Serif 4, serif" }} width={72} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    cursor={{ fill: "rgba(28,43,58,0.05)" }}
-                    contentStyle={{ fontSize: 11, borderRadius: 3, border: "1px solid rgba(28,43,58,0.15)", background: "var(--paper)" }}
-                    formatter={(v, _, p) => [v.toLocaleString(), p.payload.fullName]}
-                  />
-                  <Bar dataKey="count" radius={[0, 3, 3, 0]} label={{ position: "right", fontSize: 9, fill: "var(--ink-light)", formatter: v => v.toLocaleString() }}>
-                    {chartData.map((e, i) => <Cell key={i} fill={i === 0 ? ACCENT : COLORS[(i + 1) % COLORS.length]} />)}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            ) : <div className="np-loading"><Loader2 className="spin" size={20} /></div>}
-          </div>
-
-          <div className="np-rule" style={{ marginTop: "1.25rem" }} />
-          <div className="np-section-label">Categories</div>
-          <div className="np-rule" />
-          <div style={{ height: 160, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            {categoryData.length > 0 ? (
-              <>
-                <div style={{ flex: "0 0 100px", height: 160 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie data={categoryData} cx="50%" cy="50%" innerRadius={32} outerRadius={48} paddingAngle={2} dataKey="value" stroke="none">
-                        {categoryData.map((_, i) => <PieCell key={i} fill={i === 0 ? ACCENT : COLORS[(i + 1) % COLORS.length]} />)}
-                      </Pie>
-                      <Tooltip contentStyle={{ fontSize: 10, borderRadius: 3, border: "1px solid rgba(28,43,58,0.15)", background: "var(--paper)" }} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                  {categoryData.map((c, i) => {
-                    const total = categoryData.reduce((s, x) => s + x.value, 0);
-                    return (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-                        <div style={{ width: 7, height: 7, borderRadius: "50%", background: i === 0 ? ACCENT : COLORS[(i + 1) % COLORS.length], flexShrink: 0 }} />
-                        <span style={{ fontSize: "0.65rem", color: "var(--ink-mid)", flex: 1, textTransform: "capitalize" }}>{c.name}</span>
-                        <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "var(--ink)", fontFamily: "Playfair Display, serif" }}>
-                          {Math.round((c.value / total) * 100)}%
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
-            ) : <div className="np-loading"><Loader2 className="spin" size={20} /></div>}
-          </div>
-
           {/* Keywords */}
           {selectedCluster !== "all" && clusterInfo.keywords?.[selectedCluster] && (
             <>
@@ -354,24 +287,6 @@ export default function App() {
               <span className="np-author-count">{a.count}</span>
             </div>
           ))}
-
-          <div className="np-rule" style={{ marginTop: "1.5rem" }} />
-          <div className="np-section-label">At a Glance</div>
-          <div className="np-rule" />
-          <div className="np-glance">
-            <div className="np-glance-item">
-              <div className="np-glance-val">{(stats.total || 0).toLocaleString()}</div>
-              <div className="np-glance-lbl">Total Articles</div>
-            </div>
-            <div className="np-glance-item">
-              <div className="np-glance-val">{clusterKeys.length}</div>
-              <div className="np-glance-lbl">Clusters</div>
-            </div>
-            <div className="np-glance-item">
-              <div className="np-glance-val">{stats.avgPerDay}</div>
-              <div className="np-glance-lbl">Avg / Day</div>
-            </div>
-          </div>
 
           {pagination.total > 0 && (
             <>
