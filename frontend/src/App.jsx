@@ -20,6 +20,14 @@ function fmtDate(str) {
   catch { return str.slice(0, 10); }
 }
 
+function fmtHeadline(str) {
+  if (!str) return "";
+  // Strip trailing source tags like " cnn", " bbc", " reuters" etc.
+  let h = str.replace(/\s+(cnn|bbc|reuters|ap|afp|nbc|abc|cbs|fox|npr)\s*$/i, "").trim();
+  // Capitalize first letter
+  return h.charAt(0).toUpperCase() + h.slice(1);
+}
+
 // ── Article Modal ──────────────────────────────────────────────────────────
 function ArticleModal({ article, onClose }) {
   useEffect(() => {
@@ -33,7 +41,7 @@ function ArticleModal({ article, onClose }) {
       <div className="modal-card" onClick={e => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose} aria-label="Close"><X size={18} /></button>
         <div className="modal-flag">{article.cluster}</div>
-        <h2 className="modal-title">{article.Headline || "Untitled"}</h2>
+        <h2 className="modal-title">{fmtHeadline(article.Headline) || "Untitled"}</h2>
         <div className="modal-byline">
           {article.Author && <span>By {article.Author}</span>}
           {article["Date published"] && <span>{fmtDate(article["Date published"])}</span>}
@@ -184,7 +192,7 @@ export default function App() {
               {featured && (
                 <article className="np-featured" onClick={() => setModal(featured)}>
                   <div className="np-flag">{featured.cluster}</div>
-                  <h2 className="np-featured-headline">{featured.Headline}</h2>
+                  <h2 className="np-featured-headline">{fmtHeadline(featured.Headline)}</h2>
                   {featured.Description && <p className="np-featured-desc">{featured.Description.slice(0, 180)}{featured.Description.length > 180 ? "…" : ""}</p>}
                   <div className="np-byline">
                     {featured.Author && <span>By {featured.Author.split(",")[0]}</span>}
@@ -200,7 +208,7 @@ export default function App() {
                 {secondary.map((a, i) => (
                   <article key={i} className="np-secondary" onClick={() => setModal(a)}>
                     <div className="np-flag np-flag-sm">{a.cluster}</div>
-                    <h3 className="np-secondary-headline">{a.Headline}</h3>
+                    <h3 className="np-secondary-headline">{fmtHeadline(a.Headline)}</h3>
                     {a.Description && <p className="np-secondary-desc">{a.Description.slice(0, 100)}…</p>}
                     <div className="np-byline">{a.Author && <span>By {a.Author.split(",")[0]}</span>}</div>
                   </article>
@@ -213,7 +221,7 @@ export default function App() {
               <div className="np-rest-grid">
                 {rest.map((a, i) => (
                   <article key={i} className="np-rest-item" onClick={() => setModal(a)}>
-                    <h4 className="np-rest-headline">{a.Headline}</h4>
+                    <h4 className="np-rest-headline">{fmtHeadline(a.Headline)}</h4>
                     <div className="np-byline">
                       {a.Category && <span>{a.Category}</span>}
                       {a["Date published"] && <span>{fmtDate(a["Date published"])}</span>}
